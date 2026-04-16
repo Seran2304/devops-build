@@ -15,7 +15,6 @@ pipeline {
         }
 
         stage('Push Dev') {
-            when { branch 'dev' }
             steps {
                 sh 'docker push $DEV_IMAGE:latest'
             }
