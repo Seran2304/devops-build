@@ -21,7 +21,6 @@ pipeline {
         }
 
         stage('Push Prod') {
-            when { branch 'master' }
             steps {
                 sh 'docker tag $DEV_IMAGE:latest $PROD_IMAGE:latest'
                 sh 'docker push $PROD_IMAGE:latest'
