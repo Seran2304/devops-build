@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DEV_IMAGE = "seran2304/dev"
-        PROD_IMAGE = "seran2304/prod"
+        DEV_IMAGE = "seran23/dev"
+        PROD_IMAGE = "seran23/prod"
     }
 
     stages {
