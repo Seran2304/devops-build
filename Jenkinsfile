@@ -1,46 +1,37 @@
 pipeline {
     agent any
 
-    stages {
+    environment {
+        DEV_IMAGE = "seran2304/dev"
+        PROD_IMAGE = "seran2304/prod"
+    }
 
-        stage('Clone') {
-            steps {
-                git branch: "${env.BRANCH_NAME}",
-                url: 'https://github.com/seran2304/devops-build.git'
-            }
-        }
+    stages {
 
         stage('Build') {
             steps {
-                script {
-                    if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker build -t seran23/dev:latest .'
-                    } else {
-                        sh 'docker build -t seran23/prod:latest .'
-                    }
-                }
+                sh 'docker build -t $DEV_IMAGE:latest .'
             }
         }
 
-        stage('Push') {
+        stage('Push Dev') {
+            when { branch 'dev' }
             steps {
-                script {
-                    if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker push seran23/dev:latest'
-                    } else {
-                        sh 'docker push seran23/prod:latest'
-                    }
-                }
+                sh 'docker push $DEV_IMAGE:latest'
+            }
+        }
+
+        stage('Push Prod') {
+            when { branch 'master' }
+            steps {
+                sh 'docker tag $DEV_IMAGE:latest $PROD_IMAGE:latest'
+                sh 'docker push $PROD_IMAGE:latest'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh '''
-                docker rm -f react-app || true
-                docker rm -f react-prod-app || true
-                docker-compose up -d --build
-                '''
+                sh './deploy.sh'
             }
         }
     }
