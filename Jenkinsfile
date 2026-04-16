@@ -6,7 +6,7 @@ pipeline {
         stage('Clone') {
             steps {
                 git branch: "${env.BRANCH_NAME}",
-                url: 'https://github.com/<your-username>/devops-build.git'
+                url: 'https://github.com/seran2304/devops-build1.git'
             }
         }
 
